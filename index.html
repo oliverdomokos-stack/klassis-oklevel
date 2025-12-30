@@ -304,6 +304,9 @@
 </div>
 
 <script>
+    // Globális változó az aktuálisan kiválasztott dátum megőrzéséhez
+    let selectedDate = "";
+
     const contents = {
         megtakaritas: {
             title: "TELJESÍTÉSI SZÁNDÉK",
@@ -332,6 +335,28 @@
         }
     };
 
+    // Aktuális dátum beállítása magyar formátumban
+    function setTodayDate() {
+        if (!selectedDate) {
+            const today = new Date().toLocaleDateString('hu-HU', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).replace(/\s/g, '');
+            selectedDate = today;
+        }
+        
+        const dateInput = document.getElementById('current-date-input');
+        if (dateInput) {
+            dateInput.value = selectedDate;
+            
+            // Figyeljük, ha a felhasználó kézzel módosítja a dátumot
+            dateInput.addEventListener('input', (e) => {
+                selectedDate = e.target.value;
+            });
+        }
+    }
+
     function changeContent(type, btn) {
         document.querySelectorAll('.btn-type').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -340,21 +365,18 @@
         document.getElementById('cert-title').innerText = data.title;
         document.getElementById('cert-quote').innerText = data.quote;
         document.getElementById('dynamic-text').innerHTML = data.text;
+        
+        // Tartalomváltás után ismét beállítjuk a dátumot, mert az inputok újragenerálódhatnak
+        setTodayDate();
     }
 
-    // Aktuális dátum beállítása magyar formátumban
-    function setTodayDate() {
-        const today = new Date().toLocaleDateString('hu-HU', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        }).replace(/\s/g, ''); // Esetleges felesleges szóközök eltávolítása
-        document.getElementById('current-date-input').value = today;
-    }
-
-    // Betöltéskor fusson le
-    window.onload = setTodayDate;
-    setTodayDate(); // Biztonság kedvéért azonnal is
+    // Inicializálás
+    window.addEventListener('DOMContentLoaded', () => {
+        setTodayDate();
+    });
+    
+    // Fallback ha a DOMContentLoaded már lefutott
+    setTodayDate();
 </script>
 
 </body>
