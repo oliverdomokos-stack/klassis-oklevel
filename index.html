@@ -24,21 +24,29 @@
             box-sizing: border-box;
         }
 
-        /* Külső konténer a reszponzivitáshoz a weboldalon belül */
+        /* Külső konténer a reszponzivitáshoz */
         .certificate-container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 100vw;
             overflow-x: auto;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             padding: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #c5a059 #f3f4f6;
+        }
+
+        @media (min-width: 310mm) {
+            .certificate-container {
+                justify-content: center;
+            }
         }
 
         /* A4 Landscape méretek */
         .page {
             width: 297mm;
             height: 210mm;
-            min-width: 297mm; /* Megakadályozza az összecsúszást */
+            min-width: 297mm;
             padding: 10mm;
             background: white;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
@@ -67,15 +75,16 @@
             letter-spacing: 6px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
             text-align: center;
-            margin: 20px 0;
+            margin: 15px 0;
+            line-height: 1.2;
         }
 
         .gold-seal {
             position: absolute;
             bottom: 25mm;
-            right: 35mm;
-            width: 140px;
-            height: 140px;
+            right: 30mm;
+            width: 130px;
+            height: 130px;
             background: radial-gradient(circle, #f9dfa1 0%, #d4af37 40%, #b8860b 100%);
             border-radius: 50%;
             display: flex;
@@ -91,7 +100,7 @@
             font-family: 'Cinzel', serif;
             color: #5d4400;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
             line-height: 1.1;
         }
@@ -106,6 +115,22 @@
             text-align: center;
             padding: 0 10px;
             outline: none;
+            transition: border-bottom 0.3s;
+        }
+
+        /* Speciális stílus a dátum inputnak az aláírásnál */
+        .date-input {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            width: 140px;
+            border-bottom: 1px solid #cbd5e1;
+            color: #475569;
+        }
+
+        .input-underline:focus {
+            border-bottom: 2px solid #1a365d;
+            background: rgba(197, 160, 89, 0.05);
         }
 
         .content-text {
@@ -113,8 +138,8 @@
             line-height: 1.8;
             color: #2d3748;
             text-align: justify;
-            margin-top: 40px;
-            padding: 0 60px;
+            margin-top: 30px;
+            padding: 0 50px;
         }
 
         .signature-area {
@@ -122,12 +147,12 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            padding: 0 40px 20px 40px;
+            padding: 0 40px 10px 40px;
         }
 
         .sig-box {
             text-align: center;
-            width: 280px;
+            width: 260px;
         }
 
         .sig-line {
@@ -137,7 +162,7 @@
 
         .sig-title {
             font-family: 'Cinzel', serif;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             color: #1a365d;
             text-transform: uppercase;
@@ -147,72 +172,74 @@
             position: absolute;
             top: -15px;
             left: 50px;
-            width: 55px;
-            height: 110px;
+            width: 50px;
+            height: 100px;
             background: #a52a2a;
             clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 88%, 0% 100%);
             box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
             z-index: 5;
         }
 
-        /* Eszköztár stílusok */
+        /* Eszköztár */
         .klassis-toolbar {
             background: white;
-            padding: 24px;
-            border-radius: 16px;
+            padding: 20px;
+            border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             width: 95%;
-            max-width: 900px;
+            max-width: 1000px;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
         }
 
         .klassis-btn {
-            padding: 10px 18px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid transparent;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .btn-type { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
-        .btn-type:hover { background: #e2e8f0; }
+        .btn-type { background: #f8fafc; color: #64748b; border-color: #e2e8f0; }
+        .btn-type:hover { background: #f1f5f9; border-color: #cbd5e1; }
         .btn-type.active { background: #1a365d; color: white; border-color: #1a365d; }
         
         .btn-print {
             background: #16a34a;
             color: white;
-            padding: 14px 30px;
-            font-size: 16px;
+            padding: 12px 25px;
+            font-size: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 10px;
+            border: none;
         }
-        .btn-print:hover { background: #15803d; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3); }
+        .btn-print:hover { background: #15803d; transform: translateY(-1px); }
 
-        /* Nyomtatási optimalizálás - Weboldal elemeinek elrejtése */
+        /* Nyomtatási nézet */
         @media print {
-            /* Elrejtünk mindent, ami nem a mi szerkesztőnk */
+            @page { size: landscape; margin: 0; }
             body > *:not(#klassis-editor-root) { display: none !important; }
-            #klassis-editor-root { background: white !important; padding: 0 !important; }
+            #klassis-editor-root { background: white !important; padding: 0 !important; display: block !important; }
             .no-print { display: none !important; }
-            
-            .certificate-container { padding: 0 !important; overflow: visible !important; }
+            .certificate-container { padding: 0 !important; overflow: visible !important; display: block !important; }
             .page { 
                 margin: 0 !important; 
                 box-shadow: none !important; 
                 transform: none !important;
                 width: 297mm;
                 height: 210mm;
+                page-break-after: avoid;
             }
-            .inner-border { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            input::placeholder { color: transparent !important; }
+            .inner-border { -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 12px double #c5a059 !important; }
             input { border-bottom: 1px solid #c5a059 !important; }
+            .gold-seal { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -227,11 +254,11 @@
         <button onclick="changeContent('kritikus', this)" class="klassis-btn btn-type">Kritikus betegség</button>
         <button onclick="changeContent('ures', this)" class="klassis-btn btn-type bg-amber-50 border-amber-200 text-amber-800">Üres Sablon</button>
         
-        <div class="w-full flex flex-col items-center gap-2">
+        <div class="w-full flex flex-col items-center gap-2 border-t pt-4 mt-2">
             <button onclick="window.print()" class="klassis-btn btn-print">
-                Nyomtatás / Mentés PDF-ként
+                Nyomtatás / PDF Mentése
             </button>
-            <span class="text-[11px] text-gray-400 italic">Beállítás: Fekvő tájolás, Margók: Nincs</span>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Klassis Digitális Értékpapír</p>
         </div>
     </div>
 
@@ -241,13 +268,13 @@
             <div class="inner-border">
                 <div class="ribbon-red"></div>
                 
-                <div class="text-center mt-6">
-                    <p class="uppercase tracking-[0.3em] text-gray-400 font-bold text-xs mb-4" style="font-family: 'Montserrat', sans-serif;">Klassis Értékteremtő Program</p>
+                <div class="text-center mt-4">
+                    <p class="uppercase tracking-[0.4em] text-gray-400 font-bold text-[10px] mb-3" style="font-family: 'Montserrat', sans-serif;">Klassis Értékteremtő Program</p>
                     <h1 class="certificate-title" id="cert-title">TELJESÍTÉSI SZÁNDÉK</h1>
-                    <p class="font-serif italic text-2xl text-gray-600 mt-2" id="cert-quote" style="font-family: 'Great Vibes', cursive; font-size: 36px;">„A jövő azoké, akik ma tesznek érte.”</p>
+                    <p class="italic text-gray-600 mt-1" id="cert-quote" style="font-family: 'Great Vibes', cursive; font-size: 38px;">„A jövő azoké, akik ma tesznek érte.”</p>
                 </div>
 
-                <div class="content-text px-16" id="dynamic-text">
+                <div class="content-text" id="dynamic-text">
                     Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, 
                     a mai napon ünnepélyesen kinyilatkoztatom elhatározásomat, hogy pénzügyi jövőmet biztos alapokra helyezem. 
                     Célom, hogy <input type="text" class="input-underline w-16" placeholder="év"> év múlva 
@@ -260,7 +287,7 @@
                         <div class="sig-title">Elkötelezett Ügyfél</div>
                     </div>
                     <div class="text-center font-bold text-gray-400 mb-2">
-                        <p class="text-[11px] italic">Kelt: <span id="current-date"></span></p>
+                        <p class="text-[10px] italic">Kelt: <input type="text" id="current-date-input" class="input-underline date-input" value=""></p>
                     </div>
                     <div class="sig-box">
                         <div class="sig-line"></div>
@@ -269,7 +296,7 @@
                 </div>
 
                 <div class="gold-seal">
-                    <div class="gold-seal-text">KLASSIS<br><small style="font-size: 10px; opacity: 0.8;">GARANCIA</small></div>
+                    <div class="gold-seal-text">KLASSIS<br><small style="font-size: 9px; opacity: 0.9;">HITELLESÍTVE</small></div>
                 </div>
             </div>
         </div>
@@ -296,29 +323,38 @@
         kritikus: {
             title: "EGÉSZSÉGVÉDELMI SZÁNDÉK",
             quote: "„A legfontosabb küzdelemben a pénznek nem akadálynak, hanem eszköznek kell lennie.”",
-            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, saját gyógyulási esélyeim maximalizálása érdekében <input type="text" class="input-underline w-64" placeholder="összeg"> Ft-os azonnali tőkevédelmet hozok létre kritikus betegségek esetére. Ez az én pajzsom a váratlan helyzetekkel szemben.`
+            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, saját gyógyulási esélyeim maximalizálása érdekében <input type="text" class="input-underline w-64" placeholder="összeg"> Ft-os azonnali tőkevédelmet hozok létre kritikus betegségek esetére.`
         },
         ures: {
-            title: "TELJESÍTÉSI SZÁNDÉK",
+            title: "EGYEDI NYILATKOZAT",
             quote: "„_________________________________________________”",
             text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder=" "> ....................................................................., a mai napon kinyilatkoztatom szándékomat, hogy .................................................................................................................................................... <br><br> Vállalom, hogy ........................................................................................................... érdekében havi .................................................... Ft összeget különítek el.`
         }
     };
 
     function changeContent(type, btn) {
-        // Gombok stílusának frissítése
         document.querySelectorAll('.btn-type').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // Tartalom frissítése
         const data = contents[type];
         document.getElementById('cert-title').innerText = data.title;
         document.getElementById('cert-quote').innerText = data.quote;
         document.getElementById('dynamic-text').innerHTML = data.text;
     }
 
-    // Aktuális dátum
-    document.getElementById('current-date').innerText = new Date().toLocaleDateString('hu-HU');
+    // Aktuális dátum beállítása magyar formátumban
+    function setTodayDate() {
+        const today = new Date().toLocaleDateString('hu-HU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).replace(/\s/g, ''); // Esetleges felesleges szóközök eltávolítása
+        document.getElementById('current-date-input').value = today;
+    }
+
+    // Betöltéskor fusson le
+    window.onload = setTodayDate;
+    setTodayDate(); // Biztonság kedvéért azonnal is
 </script>
 
 </body>
