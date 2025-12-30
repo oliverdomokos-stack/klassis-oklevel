@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLASSIS - Prémium Oklevél Generátor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        /* Alapértelmezett reset a beágyazáshoz */
+        #klassis-editor-root {
+            all: initial;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f3f4f6;
+            padding: 20px 0;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        #klassis-editor-root * {
+            box-sizing: border-box;
+        }
+
+        /* Külső konténer a reszponzivitáshoz a weboldalon belül */
+        .certificate-container {
+            width: 100%;
+            max-width: 1200px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* A4 Landscape méretek */
+        .page {
+            width: 297mm;
+            height: 210mm;
+            min-width: 297mm; /* Megakadályozza az összecsúszást */
+            padding: 10mm;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-origin: top center;
+        }
+
+        .inner-border {
+            border: 12px double #c5a059;
+            width: 100%;
+            height: 100%;
+            padding: 15mm;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #ffffff 0%, #fffdfa 100%);
+        }
+
+        .certificate-title {
+            font-family: 'Cinzel', serif;
+            color: #1a365d;
+            font-size: 52px;
+            letter-spacing: 6px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .gold-seal {
+            position: absolute;
+            bottom: 25mm;
+            right: 35mm;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, #f9dfa1 0%, #d4af37 40%, #b8860b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.4);
+            transform: rotate(-10deg);
+            z-index: 10;
+        }
+
+        .gold-seal-text {
+            font-family: 'Cinzel', serif;
+            color: #5d4400;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .input-underline {
+            border: none;
+            border-bottom: 2px solid #c5a059;
+            background: transparent;
+            font-family: 'Great Vibes', cursive;
+            font-size: 32px;
+            color: #1a365d;
+            text-align: center;
+            padding: 0 10px;
+            outline: none;
+        }
+
+        .content-text {
+            font-size: 20px;
+            line-height: 1.8;
+            color: #2d3748;
+            text-align: justify;
+            margin-top: 40px;
+            padding: 0 60px;
+        }
+
+        .signature-area {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 40px 20px 40px;
+        }
+
+        .sig-box {
+            text-align: center;
+            width: 280px;
+        }
+
+        .sig-line {
+            border-top: 2px solid #1a365d;
+            margin-bottom: 8px;
+        }
+
+        .sig-title {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+        }
+
+        .ribbon-red {
+            position: absolute;
+            top: -15px;
+            left: 50px;
+            width: 55px;
+            height: 110px;
+            background: #a52a2a;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 88%, 0% 100%);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        /* Eszköztár stílusok */
+        .klassis-toolbar {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            width: 95%;
+            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .klassis-btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .btn-type { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+        .btn-type:hover { background: #e2e8f0; }
+        .btn-type.active { background: #1a365d; color: white; border-color: #1a365d; }
+        
+        .btn-print {
+            background: #16a34a;
+            color: white;
+            padding: 14px 30px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        .btn-print:hover { background: #15803d; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3); }
+
+        /* Nyomtatási optimalizálás - Weboldal elemeinek elrejtése */
+        @media print {
+            /* Elrejtünk mindent, ami nem a mi szerkesztőnk */
+            body > *:not(#klassis-editor-root) { display: none !important; }
+            #klassis-editor-root { background: white !important; padding: 0 !important; }
+            .no-print { display: none !important; }
+            
+            .certificate-container { padding: 0 !important; overflow: visible !important; }
+            .page { 
+                margin: 0 !important; 
+                box-shadow: none !important; 
+                transform: none !important;
+                width: 297mm;
+                height: 210mm;
+            }
+            .inner-border { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            input::placeholder { color: transparent !important; }
+            input { border-bottom: 1px solid #c5a059 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="klassis-editor-root">
+    <!-- Eszköztár -->
+    <div class="klassis-toolbar no-print">
+        <button onclick="changeContent('megtakaritas', this)" class="klassis-btn btn-type active">Megtakarítás</button>
+        <button onclick="changeContent('eletbiztositas', this)" class="klassis-btn btn-type">Életbiztosítás</button>
+        <button onclick="changeContent('rokkantsag', this)" class="klassis-btn btn-type">Rokkantság</button>
+        <button onclick="changeContent('kritikus', this)" class="klassis-btn btn-type">Kritikus betegség</button>
+        <button onclick="changeContent('ures', this)" class="klassis-btn btn-type bg-amber-50 border-amber-200 text-amber-800">Üres Sablon</button>
+        
+        <div class="w-full flex flex-col items-center gap-2">
+            <button onclick="window.print()" class="klassis-btn btn-print">
+                Nyomtatás / Mentés PDF-ként
+            </button>
+            <span class="text-[11px] text-gray-400 italic">Beállítás: Fekvő tájolás, Margók: Nincs</span>
+        </div>
+    </div>
+
+    <!-- Oklevél Nézet -->
+    <div class="certificate-container">
+        <div class="page" id="printable-area">
+            <div class="inner-border">
+                <div class="ribbon-red"></div>
+                
+                <div class="text-center mt-6">
+                    <p class="uppercase tracking-[0.3em] text-gray-400 font-bold text-xs mb-4" style="font-family: 'Montserrat', sans-serif;">Klassis Értékteremtő Program</p>
+                    <h1 class="certificate-title" id="cert-title">TELJESÍTÉSI SZÁNDÉK</h1>
+                    <p class="font-serif italic text-2xl text-gray-600 mt-2" id="cert-quote" style="font-family: 'Great Vibes', cursive; font-size: 36px;">„A jövő azoké, akik ma tesznek érte.”</p>
+                </div>
+
+                <div class="content-text px-16" id="dynamic-text">
+                    Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, 
+                    a mai napon ünnepélyesen kinyilatkoztatom elhatározásomat, hogy pénzügyi jövőmet biztos alapokra helyezem. 
+                    Célom, hogy <input type="text" class="input-underline w-16" placeholder="év"> év múlva 
+                    <input type="text" class="input-underline w-64" placeholder="összeg"> Ft vagyonnal rendelkezzem.
+                </div>
+
+                <div class="signature-area">
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        <div class="sig-title">Elkötelezett Ügyfél</div>
+                    </div>
+                    <div class="text-center font-bold text-gray-400 mb-2">
+                        <p class="text-[11px] italic">Kelt: <span id="current-date"></span></p>
+                    </div>
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        <div class="sig-title">Klassis Pénzügyi Partner</div>
+                    </div>
+                </div>
+
+                <div class="gold-seal">
+                    <div class="gold-seal-text">KLASSIS<br><small style="font-size: 10px; opacity: 0.8;">GARANCIA</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const contents = {
+        megtakaritas: {
+            title: "TELJESÍTÉSI SZÁNDÉK",
+            quote: "„A gazdagság nem a véletlen műve, hanem tudatos döntések sorozata.”",
+            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, a mai napon kinyilatkoztatom elhatározásomat a vagyongyarapítás mellett. Célom, hogy <input type="text" class="input-underline w-16" placeholder="év"> év múlva <input type="text" class="input-underline w-64" placeholder="összeg"> Ft vagyonnal rendelkezzem, melynek érdekében havi <input type="text" class="input-underline w-48" placeholder="összeg"> Ft megtakarítást indítok el.`
+        },
+        eletbiztositas: {
+            title: "GONDOSKODÁSI NYILATKOZAT",
+            quote: "„A szeretet ott kezdődik, ahol a felelősségvállalás láthatóvá válik.”",
+            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Gondoskodó neve">, ünnepélyesen vállalom, hogy családom anyagi biztonságát megőrzöm. Szeretteim védelme érdekében <input type="text" class="input-underline w-64" placeholder="összeg"> Ft értékű életbiztosítási fedezetet hozok létre, garantálva nyugalmukat.`
+        },
+        rokkantsag: {
+            title: "MÉLTÓSÁG TANÚSÍTVÁNY",
+            quote: "„Nem a bajt előzzük meg, hanem a kiszolgáltatottságot.”",
+            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, felismerve munkaképességem értékét, <input type="text" class="input-underline w-64" placeholder="összeg"> Ft összegű rokkantsági védelmet aktiválok. Ezzel biztosítom, hogy bármilyen élethelyzetben megőrizhessem anyagi függetlenségemet.`
+        },
+        kritikus: {
+            title: "EGÉSZSÉGVÉDELMI SZÁNDÉK",
+            quote: "„A legfontosabb küzdelemben a pénznek nem akadálynak, hanem eszköznek kell lennie.”",
+            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder="Ügyfél neve">, saját gyógyulási esélyeim maximalizálása érdekében <input type="text" class="input-underline w-64" placeholder="összeg"> Ft-os azonnali tőkevédelmet hozok létre kritikus betegségek esetére. Ez az én pajzsom a váratlan helyzetekkel szemben.`
+        },
+        ures: {
+            title: "TELJESÍTÉSI SZÁNDÉK",
+            quote: "„_________________________________________________”",
+            text: `Alulírott, <input type="text" class="input-underline w-[380px]" placeholder=" "> ....................................................................., a mai napon kinyilatkoztatom szándékomat, hogy .................................................................................................................................................... <br><br> Vállalom, hogy ........................................................................................................... érdekében havi .................................................... Ft összeget különítek el.`
+        }
+    };
+
+    function changeContent(type, btn) {
+        // Gombok stílusának frissítése
+        document.querySelectorAll('.btn-type').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Tartalom frissítése
+        const data = contents[type];
+        document.getElementById('cert-title').innerText = data.title;
+        document.getElementById('cert-quote').innerText = data.quote;
+        document.getElementById('dynamic-text').innerHTML = data.text;
+    }
+
+    // Aktuális dátum
+    document.getElementById('current-date').innerText = new Date().toLocaleDateString('hu-HU');
+</script>
+
+</body>
+</html>
